@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+    
+    <bean id="dbProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="/WEB-INF/db.properties" /> 
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+          <property name="driverClassName" value="${jdbc.driverClassName}" />
+          <property name="url" value="${jdbc.url}" />
+          <property name="username" value="${jdbc.username}" />
+          <property name="password" value="${jdbc.password}" />
+    </bean>
+    
+    <bean id="userDAO" class="com.intertec.model.dao.UserDAO">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="restrictedDAO" class="com.intertec.model.dao.RestrictedDAO">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+       
+    <bean id="initDB" class="com.intertec.utils.InitDB">
+        <constructor-arg index="0" ref="dataSource"/>
+        <constructor-arg index="1" ref="userDAO"/>
+        <constructor-arg index="2" ref="restrictedDAO"/>
+    </bean>
+    
+    <bean id="serviceUser" class="com.intertec.service.impl.ServiceUserImpl">
+        <property name="userDAO" ref="userDAO"/>
+        <property name="restrictedDAO" ref="restrictedDAO"/>
+    </bean>
+        
+    
+    
+</beans>
