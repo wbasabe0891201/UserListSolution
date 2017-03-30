@@ -6,6 +6,7 @@
 package com.intertec.service;
 
 import com.intertec.model.dao.DAO;
+import com.intertec.model.pojo.Restricted;
 import com.intertec.model.pojo.Result;
 import com.intertec.model.pojo.User;
 import com.intertec.service.impl.ServiceUserImpl;
@@ -87,9 +88,9 @@ public class ServiceUserTest {
         //GIVEN
         String unserNameStr = "restrictedUsername";
         Result result = null;
-        User auxUser = new User();
-        auxUser.setName("restricted");
-        when(restrictedDAO.findByName(unserNameStr)).thenReturn(auxUser);
+        Restricted auxRestricted = new Restricted();
+        auxRestricted.setName("restricted");
+        when(restrictedDAO.findReverseLike(unserNameStr)).thenReturn(auxRestricted);
         
         //WHEN
         result = serviceUser.checkUsername(unserNameStr);
@@ -97,11 +98,10 @@ public class ServiceUserTest {
         //THEN
         verify(userDAO, never()).findByName(unserNameStr);
         verify(userDAO, never()).save(any(User.class));
-        verify(restrictedDAO, atLeastOnce()).findByName(unserNameStr);
+        verify(restrictedDAO, atLeastOnce()).findReverseLike(unserNameStr);
         assertFalse("Because the user already exists the result shoud be NOT SUCCESS'", result.getSuccess());
         assertTrue("Because the user contyains a restricted word the result's alternative usernames should have 14 elements",
                 result.getAltUserNames().size() == 14);
-        System.out.println(result.getAltUserNames());
     }
     
     @Test
@@ -109,20 +109,20 @@ public class ServiceUserTest {
         //GIVEN
         String unserNameStr = "restrictedUglyNice";
         Result result = null;
-        User auxUser = new User();
+        Restricted auxUser = new Restricted();
         auxUser.setName("restricted");
-        User auxUser2 = new User();
+        Restricted auxUser2 = new Restricted();
         auxUser2.setName("Ugly");
-        when(restrictedDAO.findByName(anyString())).then(new Answer<User>() {
+        when(restrictedDAO.findReverseLike(anyString())).then(new Answer<Restricted>() {
             @Override
-            public User answer(InvocationOnMock invocation) throws Throwable {
+            public Restricted answer(InvocationOnMock invocation) throws Throwable {
                 String userName = (String) invocation.getArguments()[0];
                 if (userName.contains("restricted")) {
-                    User user = new User();
+                    Restricted user = new Restricted();
                     user.setName("restricted");
                     return user;
                 } else if (userName.contains("Ugly")) {
-                    User user = new User();
+                    Restricted user = new Restricted();
                     user.setName("Ugly");
                     return user;
                 } else {
@@ -137,7 +137,7 @@ public class ServiceUserTest {
         //THEN
         verify(userDAO, never()).findByName(unserNameStr);
         verify(userDAO, never()).save(any(User.class));
-        verify(restrictedDAO, atLeastOnce()).findByName(unserNameStr);
+        verify(restrictedDAO, atLeastOnce()).findReverseLike(unserNameStr);
         assertFalse("Because the user already exists the result shoud be NOT SUCCESS'", result.getSuccess());
         System.out.println("RESULTADO = " + result.getAltUserNames());
         assertTrue("Because the user already exists the result's alternative usernames should have 14 elements",

@@ -13,19 +13,19 @@
     </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-          <property name="driverClassName" value="${jdbc.driverClassName}" />
-          <property name="url" value="${jdbc.url}" />
-          <property name="username" value="${jdbc.username}" />
-          <property name="password" value="${jdbc.password}" />
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/username" />
+        <property name="username" value="root" />
+        <property name="password" value="0891201" />
     </bean>
     
     <bean id="userDAO" class="com.intertec.model.dao.UserDAO">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="restrictedDAO" class="com.intertec.model.dao.RestrictedDAO">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="dataSource" />
     </bean>
-       
+    
     <bean id="initDB" class="com.intertec.utils.InitDB">
         <constructor-arg index="0" ref="dataSource"/>
         <constructor-arg index="1" ref="userDAO"/>
@@ -36,7 +36,9 @@
         <property name="userDAO" ref="userDAO"/>
         <property name="restrictedDAO" ref="restrictedDAO"/>
     </bean>
+    
+    <bean id="serviceRestricted" class="com.intertec.service.impl.ServiceRestrictedImpl">
+        <property name="restrictedDAO" ref="restrictedDAO"/>
+    </bean>
         
-    
-    
 </beans>

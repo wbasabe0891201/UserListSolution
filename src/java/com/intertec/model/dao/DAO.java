@@ -24,4 +24,6 @@ public interface DAO<E> {
     Object findByName(String name);
     
     Boolean deleteALL();
+    
+    Object findReverseLike(String name);
 }

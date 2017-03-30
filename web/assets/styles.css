@@ -6,3 +6,13 @@
 .error {
     background-color: #7F0202 !important;
 }
+
+.mdl-chip {
+    cursor: pointer;
+}
+
+#add_restricted_toggle {
+    position: fixed;
+    right: 70px;
+    bottom: 70px;
+}

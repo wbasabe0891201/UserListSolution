@@ -23,8 +23,9 @@ public class UserDAO extends NameBaseDAO {
         INSERT_QUERY = replaceTableName(INSERT_QUERY, TABLE_NAME);
         DELETE_ALL_QUERY = replaceTableName(DELETE_ALL_QUERY, TABLE_NAME);
         SELECT_ALL_QUERY = replaceTableName(SELECT_ALL_QUERY, TABLE_NAME);
-        SELECT_QUERY = replaceTableName(SELECT_QUERY, TABLE_NAME);
+        SELECT_BY_NAME_QUERY = replaceTableName(SELECT_BY_NAME_QUERY, TABLE_NAME);
         COUNT_ALL_QUERY = replaceTableName(COUNT_ALL_QUERY, TABLE_NAME);
+        
     }
     
     @Override
@@ -45,6 +46,11 @@ public class UserDAO extends NameBaseDAO {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public Object findReverseLike(String name) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

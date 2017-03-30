@@ -6,7 +6,6 @@
 package com.intertec.model.dao;
 
 import com.intertec.model.pojo.User;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,32 +24,29 @@ public abstract class NameBaseDAO<E> implements DAO {
     
     private DataSource dataSource;
     protected Connection con;
-    
+
     public DataSource getDataSource() {
         return dataSource;
     }
     
-    protected static String INSERT_QUERY = "INSERT INTO <table_name> (name) values(?)";
-    protected static String SELECT_ALL_QUERY = "SELECT * FROM <table_name>";
-    protected static String SELECT_BY_NAME_QUERY = SELECT_ALL_QUERY + " WHERE name = ?";
-    protected static String COUNT_ALL_QUERY = "SELECT COUNT(*) FROM <table_name>";
-    protected static String SELECT_QUERY = "SELECT * FROM <table_name> WHERE name = ?";
-    protected static String DELETE_ALL_QUERY = "DELETE FROM <table_name>";
+    protected String INSERT_QUERY = "INSERT INTO <table_name> (name) values(?)";
+    protected String SELECT_ALL_QUERY = "SELECT * FROM <table_name>";
+    protected String SELECT_BY_NAME_QUERY = SELECT_ALL_QUERY + " WHERE name = ?";
+    protected String COUNT_ALL_QUERY = "SELECT COUNT(*) FROM <table_name>";
+    protected String DELETE_ALL_QUERY = "DELETE FROM <table_name>";
+    protected String SELECT_BY_REVERSE_LIKE_QUERY = SELECT_ALL_QUERY + " WHERE ? like concat('%', name,'%')";
     
     protected String replaceTableName(String queryStr, String tableName) {
         return queryStr.replace("<table_name>", tableName);
     }
 
     public void setDataSource(DataSource dataSource) {
-        System.out.println("ME LLAMARON");
         this.dataSource = dataSource;
         try {
             con = dataSource.getConnection();
             if(con == null) {
-                System.out.println("ESTA DANDO UN ERROR");
             }
         } catch (SQLException ex) {
-            System.out.println("ESTA DANDO UN ERROR EN LA CAPTURA");
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -61,7 +57,7 @@ public abstract class NameBaseDAO<E> implements DAO {
         try {
             PreparedStatement ps = con.prepareStatement(INSERT_QUERY);
             ps.setString(1, (String) obj.getClass().getMethod("getName").invoke(obj));
-            return ps.execute();
+            return ps.executeUpdate() > 0;
         } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,7 +92,11 @@ public abstract class NameBaseDAO<E> implements DAO {
         try {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery(COUNT_ALL_QUERY);
-            return rs.getInt(1);
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
         } catch(Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -114,5 +114,6 @@ public abstract class NameBaseDAO<E> implements DAO {
         }
         return false;
     }
+
     
 }

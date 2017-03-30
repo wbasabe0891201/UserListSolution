@@ -1,6 +1,7 @@
 package com.intertec.service.impl;
 
 import com.intertec.model.dao.DAO;
+import com.intertec.model.pojo.Restricted;
 import com.intertec.model.pojo.Result;
 import com.intertec.model.pojo.User;
 import com.intertec.service.ServiceUser;
@@ -45,9 +46,9 @@ public class ServiceUserImpl implements ServiceUser {
     }
 
     private Boolean checkUsernameValid() {
-        User user = (User) restrictedDAO.findByName(username);
-        if (user != null) {
-            username = username.replace(user.getName(), "");
+        Restricted restricted = (Restricted) restrictedDAO.findReverseLike(username);
+        if (restricted != null) {
+            username = username.replace(restricted.getName(), "");
             return false;
         } else {
             return checkUserNameExists();

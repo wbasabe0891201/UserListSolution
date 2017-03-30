@@ -6,7 +6,7 @@
 package com.intertec.controller;
 
 import com.intertec.model.pojo.Result;
-import com.intertec.service.ServiceUser;
+import com.intertec.service.ServiceRestricted;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -21,8 +21,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  * @author William
  */
-@WebServlet(name = "UserServlet", urlPatterns = {"/UserServlet"})
-public class UserServlet extends HttpServlet {
+@WebServlet(name = "RestrictionServlet", urlPatterns = {"/RestrictionServlet"})
+public class RestrictionServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -40,15 +40,16 @@ public class UserServlet extends HttpServlet {
         StringBuilder responseStr = new StringBuilder();
         responseStr.append("{ ");
         
-        String username = request.getParameter("username");
+        String restricted = request.getParameter("restricted");
         
-        ServiceUser serviceUser = (ServiceUser) context.getBean("serviceUser");
-        Result result = serviceUser.checkUsername(username);
+        ServiceRestricted serviceRestrricted = (ServiceRestricted) context.getBean("serviceRestricted");
+        Result result = serviceRestrricted.insertNewRestriction(restricted);
         
         responseStr.append("\"success\": ").append(result.getSuccess());
         
+        
         if (!result.getSuccess()) {
-            responseStr.append(", \"names\": [ ");
+            responseStr.append(", \"message\": [ ");
             boolean first = true;
             for (String altUserName : result.getAltUserNames()) {
                 if (!first) {
