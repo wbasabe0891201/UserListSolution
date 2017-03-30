@@ -53,9 +53,6 @@ public class ServiceUserImpl implements ServiceUser {
         } else {
             Boolean checkUserNameExists = checkUserNameExists();
             if (!checkUserNameExists) {
-                System.out.println("POR QUE EXISTIA " + username);
-            } else {
-                System.out.println("QUE VERGA ES ESTA " + username);
             }
             return checkUserNameExists;
         }
@@ -96,7 +93,6 @@ public class ServiceUserImpl implements ServiceUser {
                 String next = iterator.next();
                 this.username = next;
                 if (!checkUsernameValid()) {
-                    System.out.println("SACO A " + username);
                     iterator.remove();
                 }
             }
