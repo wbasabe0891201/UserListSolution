@@ -37,10 +37,6 @@ public class ServiceUserTest {
         ((ServiceUserImpl) serviceUser).setRestrictedDAO(restrictedDAO);
     }
     
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of checkUsername method, of class ServiceUser.
      */
@@ -74,6 +70,7 @@ public class ServiceUserTest {
         
         //THEN
         verify(userDAO, times(1)).findByName(unserNameStr);
+        verify(userDAO, atLeastOnce()).findByName(anyString());
         verify(userDAO, never()).save(any(User.class));
         assertFalse("Because the user already exists the result shoud be NOT SUCCESS'", result.getSuccess());
         assertNotNull("Because the user already exists the result's alternative usernames should not be NULL",
@@ -96,7 +93,7 @@ public class ServiceUserTest {
         result = serviceUser.checkUsername(unserNameStr);
         
         //THEN
-        verify(userDAO, never()).findByName(unserNameStr);
+        verify(userDAO, atLeastOnce()).findByName(anyString());
         verify(userDAO, never()).save(any(User.class));
         verify(restrictedDAO, atLeastOnce()).findReverseLike(unserNameStr);
         assertFalse("Because the user already exists the result shoud be NOT SUCCESS'", result.getSuccess());
@@ -135,13 +132,13 @@ public class ServiceUserTest {
         result = serviceUser.checkUsername(unserNameStr);
         
         //THEN
-        verify(userDAO, never()).findByName(unserNameStr);
+        verify(userDAO, atLeastOnce()).findByName(anyString());
         verify(userDAO, never()).save(any(User.class));
         verify(restrictedDAO, atLeastOnce()).findReverseLike(unserNameStr);
         assertFalse("Because the user already exists the result shoud be NOT SUCCESS'", result.getSuccess());
-        System.out.println("RESULTADO = " + result.getAltUserNames());
         assertTrue("Because the user already exists the result's alternative usernames should have 14 elements",
                 result.getAltUserNames().size() < 14 && result.getAltUserNames().size() > 0);
     }
+    
     
 }

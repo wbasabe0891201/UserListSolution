@@ -51,7 +51,13 @@ public class ServiceUserImpl implements ServiceUser {
             username = username.replace(restricted.getName(), "");
             return false;
         } else {
-            return checkUserNameExists();
+            Boolean checkUserNameExists = checkUserNameExists();
+            if (!checkUserNameExists) {
+                System.out.println("POR QUE EXISTIA " + username);
+            } else {
+                System.out.println("QUE VERGA ES ESTA " + username);
+            }
+            return checkUserNameExists;
         }
     }
 
@@ -68,7 +74,6 @@ public class ServiceUserImpl implements ServiceUser {
                 switch (generationTimes) {
                     case 2:
                         //repeat username
-                        System.out.println("ENTRO A REPETIR NOMBRES");
                         alternativesNames.add(username + username);
                         alternativesNames.add(username + "_" + username);
                         alternativesNames.add(username + "-" + username);
@@ -91,6 +96,7 @@ public class ServiceUserImpl implements ServiceUser {
                 String next = iterator.next();
                 this.username = next;
                 if (!checkUsernameValid()) {
+                    System.out.println("SACO A " + username);
                     iterator.remove();
                 }
             }
@@ -99,8 +105,12 @@ public class ServiceUserImpl implements ServiceUser {
             }
         }
 
-        altUserNames = alternativesNames;
-
+        if (alternativesNames.size() > 14) {
+            altUserNames = alternativesNames.subList(0, 13);
+        } else {
+            altUserNames = alternativesNames;
+        }
+        
         return altUserNames;
     }
 
