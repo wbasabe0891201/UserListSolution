@@ -39,6 +39,7 @@ $(document).ready(function () {
                 success: function (data) {
                     if (data.success) {
                         showMessageBox("New Restriction registered successfully! :)", false);
+                        cleanRestrictedForm();
                     } else {
                         console.log(data);
                         showMessageBox(data.message, true);
@@ -88,6 +89,10 @@ function showMessageBox(mensaje, error) {
 function cleanForm() {
     $("#username").val("");
     $("#nameList").empty();
+}
+
+function cleanRestrictedForm() {
+    $("#restricted").val("");
 }
 
 function addSuggestedName(nameList) {
